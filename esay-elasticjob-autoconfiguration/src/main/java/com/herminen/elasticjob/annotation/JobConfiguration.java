@@ -60,5 +60,67 @@ public @interface JobConfiguration {
      */
     boolean misfire() default true;
 
+    /**
+     * 作业描述信息
+     * @return
+     */
     String description();
+
+    /**
+     * 作业实现类，需实现ElasticJob接口
+     * @return
+     */
+    String jobClass();
+
+    /**
+     * 是否流式处理数据
+     * 如果流式处理数据, 则fetchData不返回空结果将持续执行作业
+     * 如果非流式处理数据, 则处理数据完成后作业结束
+     * @return
+     */
+    boolean streamingProcess();
+
+    /**
+     * 监控作业运行时状态
+     * 每次作业执行时间和间隔时间均非常短的情况，建议不监控作业运行时状态以提升效率。因为是瞬时状态，所以无必要监控。请用户自行增加数据堆积监控。并且不能保证数据重复选取，应在作业中实现幂等性。
+     * 每次作业执行时间和间隔时间均较长的情况，建议监控作业运行时状态，可保证数据不会重复选取
+     * @return
+     */
+    boolean monitorExecution() default true;
+
+    /**
+     * 作业监控端口
+     * 建议配置作业监控端口, 方便开发者dump作业信息。
+     * 使用方法: echo “dump” | nc 127.0.0.1 9888
+     * @return
+     */
+    int monitorPort() default -1;
+
+    /**
+     * 最大允许的本机与注册中心的时间误差秒数
+     * 如果时间误差超过配置秒数则作业启动时将抛异常
+     * 配置为-1表示不校验时间误差
+     * @return
+     */
+    int maxTimeDiffSeconds() default -1;
+
+    /**
+     * 作业分片策略实现类全路径
+     * 默认使用平均分配策略
+     * @return
+     */
+    String jobShardingStrategyClass();
+
+    /**
+     * 修复作业服务器不一致状态服务调度间隔时间，配置为小于1的任意值表示不执行修复
+     * @return
+     */
+    int reconcileIntervalMinutes() default 10;
+
+    /**
+     * 作业事件追踪的数据源Bean引用
+     * @return
+     */
+    String eventTraceRdbDataSource();
+
 }
