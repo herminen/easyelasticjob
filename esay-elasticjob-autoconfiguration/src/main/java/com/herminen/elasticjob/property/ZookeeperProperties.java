@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 /**
  * Created on 2021/1/28.
  *
- * @author ${AUTHOR}
+ * @author herminen
  */
 @ConfigurationProperties(prefix = "easy.elasticsearch.registration")
 @Data

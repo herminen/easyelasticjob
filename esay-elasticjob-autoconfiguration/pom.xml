@@ -11,5 +11,16 @@
 
     <artifactId>esay-elasticjob-autoconfiguration</artifactId>
 
+    <dependencies>
+        <!--引入AOP依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

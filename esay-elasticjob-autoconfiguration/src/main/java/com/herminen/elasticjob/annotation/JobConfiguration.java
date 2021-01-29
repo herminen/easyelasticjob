@@ -1,16 +1,19 @@
 package com.herminen.elasticjob.annotation;
 
+import org.springframework.stereotype.Component;
+
 import java.lang.annotation.*;
 
 /**
  * Created on 2021/1/28.
  *
- * @author ${AUTHOR}
+ * @author herminen
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
+@Component
 public @interface JobConfiguration {
 
     /**
@@ -48,6 +51,8 @@ public @interface JobConfiguration {
      */
     String jobParameter();
 
+    JobProperty[] jobProperty();
+
     /**
      * 是否开启任务执行失效转移，开启表示如果作业在一次任务执行中途宕机，允许将该次未完成的任务在另一作业节点上补偿执行
      * @return
@@ -78,7 +83,7 @@ public @interface JobConfiguration {
      * 如果非流式处理数据, 则处理数据完成后作业结束
      * @return
      */
-    boolean streamingProcess();
+    boolean streamingProcess() default false;
 
     /**
      * 监控作业运行时状态
