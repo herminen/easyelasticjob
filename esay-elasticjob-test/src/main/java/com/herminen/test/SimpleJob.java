@@ -8,10 +8,10 @@ import com.herminen.elasticjob.annotation.SimpleJobConfiguration;
  *
  * @author ${AUTHOR}
  */
-@SimpleJobConfiguration(jobName = "testJob", corn = "0/5 * * * * ?", method = "execute", shardingItemParameters = "0=a,1=b", shardingTotalCount = 2)
+@SimpleJobConfiguration(jobName = "testJob", corn = "0/5 * * * * ?", method = "jobMethod")
 public class SimpleJob {
 
-    public void execute(ShardingContext shardingContext) {
+    public void jobMethod(ShardingContext shardingContext) {
         int shardingItem = shardingContext.getShardingItem();
         System.out.println("hello world! -- " + shardingItem);
     }

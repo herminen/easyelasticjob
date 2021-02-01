@@ -1,6 +1,5 @@
 package com.herminen.elasticjob.annotation.parser;
 
-import com.dangdang.ddframe.job.api.simple.SimpleJob;
 import com.dangdang.ddframe.job.config.JobCoreConfiguration;
 import com.dangdang.ddframe.job.config.JobTypeConfiguration;
 import com.dangdang.ddframe.job.config.dataflow.DataflowJobConfiguration;
@@ -10,7 +9,6 @@ import com.dangdang.ddframe.job.lite.api.JobScheduler;
 import com.dangdang.ddframe.job.lite.config.LiteJobConfiguration;
 import com.dangdang.ddframe.job.reg.zookeeper.ZookeeperRegistryCenter;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Sets;
 import com.herminen.elasticjob.annotation.JobProperty;
 import javassist.*;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +17,6 @@ import org.springframework.beans.factory.config.InstantiationAwareBeanPostProces
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-
-import java.util.HashSet;
 
 /**
  * Created with IntelliJ IDEA.
