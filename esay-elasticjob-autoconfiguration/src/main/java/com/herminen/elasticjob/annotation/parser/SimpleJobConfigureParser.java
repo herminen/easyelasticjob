@@ -46,6 +46,7 @@ public class SimpleJobConfigureParser extends InstantiationAwareBeanPostProcesso
             addJob(beanClass, annotation);
         } catch (NotFoundException |CannotCompileException |IllegalAccessException |InstantiationException e) {
             log.warn("add simple job  error}", e);
+            return super.postProcessBeforeInstantiation(beanClass, beanName);
         }
         JobCoreConfiguration jobCoreConfiguration = buildJobCoreConfiguration(annotation);
         JobTypeConfiguration jobTypeConfiguration;
@@ -61,6 +62,15 @@ public class SimpleJobConfigureParser extends InstantiationAwareBeanPostProcesso
         return super.postProcessBeforeInstantiation(beanClass, beanName);
     }
 
+    /**
+     * 动态代理实际类中的方法
+     * @param beanClass
+     * @param annotation
+     * @throws NotFoundException
+     * @throws CannotCompileException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     */
     private void addJob(Class<?> beanClass, com.herminen.elasticjob.annotation.SimpleJobConfiguration annotation) throws NotFoundException, CannotCompileException, IllegalAccessException, InstantiationException {
         DefaultListableBeanFactory listableBeanFactory = (DefaultListableBeanFactory) applicationContext.getAutowireCapableBeanFactory();
         ClassPool pool = new ClassPool(true);
