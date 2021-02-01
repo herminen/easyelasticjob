@@ -14,7 +14,7 @@ import java.lang.annotation.*;
 @Documented
 @Inherited
 @Component
-public @interface JobConfiguration {
+public @interface SimpleJobConfiguration {
 
     /**
      * 作业名称
@@ -72,12 +72,6 @@ public @interface JobConfiguration {
     String description() default "";
 
     /**
-     * 作业实现类，需实现ElasticJob接口
-     * @return
-     */
-    String jobClass();
-
-    /**
      * 是否流式处理数据
      * 如果流式处理数据, 则fetchData不返回空结果将持续执行作业
      * 如果非流式处理数据, 则处理数据完成后作业结束
@@ -121,5 +115,7 @@ public @interface JobConfiguration {
      * @return
      */
     int reconcileIntervalMinutes() default 10;
+
+    String method();
 
 }

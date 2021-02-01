@@ -6,10 +6,12 @@ import com.dangdang.ddframe.job.event.rdb.JobEventRdbConfiguration;
 import com.dangdang.ddframe.job.reg.zookeeper.ZookeeperConfiguration;
 import com.dangdang.ddframe.job.reg.zookeeper.ZookeeperRegistryCenter;
 import com.herminen.elasticjob.annotation.parser.JobConfigureParser;
+import com.herminen.elasticjob.annotation.parser.SimpleJobConfigureParser;
 import com.herminen.elasticjob.property.ZookeeperProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -24,22 +26,24 @@ import javax.sql.DataSource;
  *
  * @author herminen
  */
-@EnableConfigurationProperties(value = {ZookeeperProperties.class})
+@EnableConfigurationProperties(value = {ZookeeperProperties.class, DataSourceProperties.class})
 @Configuration
-@ConditionalOnProperty(name = {"serverLists", "namespace"}, prefix = "easy.elasticsearch.registration", matchIfMissing = false)
-@Import(value = {JobConfigureParser.class})
+@ConditionalOnProperty(name = {"server-lists", "namespace"}, prefix = "easy.elasticsearch.registration", matchIfMissing = false)
+@Import(value = {JobConfigureParser.class, SimpleJobConfigureParser.class})
 public class EasyElasticJobAutoConfiureation {
 
     @Resource
     private ZookeeperProperties zookeeperProperties;
+    @Resource
+    private DataSourceProperties dataSourceProperties;
 
-    @Value("spring.datasource.url")
+    @Value("${spring.datasource.url}")
     private String url;
-    @Value("spring.datasource.data-username")
+    @Value("${spring.datasource.username}")
     private String userName;
-    @Value("spring.datasource.data-password")
+    @Value("${spring.datasource.password}")
     private String password;
-    @Value("spring.datasource.driver-class-name")
+    @Value("${spring.datasource.driver-class-name}")
     private String driverClass;
 
     @Bean
@@ -57,21 +61,23 @@ public class EasyElasticJobAutoConfiureation {
 
     @Bean(initMethod = "init", destroyMethod = "close")
     public ZookeeperRegistryCenter zookeeperRegistryCenter(){
-        return new ZookeeperRegistryCenter(zookeeperConfiguration());
+        ZookeeperRegistryCenter zookeeperRegistryCenter = new ZookeeperRegistryCenter(zookeeperConfiguration());
+        zookeeperRegistryCenter.init();
+        return zookeeperRegistryCenter;
     }
 
-    @ConditionalOnProperty(name = {"url", "data-username", "data-password", "driver-class-name"}, prefix = "spring.datasource", matchIfMissing = false)
+    @ConditionalOnProperty(name = {"url", "username", "password", "driver-class-name"}, prefix = "spring.datasource", matchIfMissing = false)
     @Bean
     public DataSource dataSource(){
         DruidDataSource druidDataSource = new DruidDataSource();
-        druidDataSource.setUrl(url);
-        druidDataSource.setUsername(userName);
-        druidDataSource.setUsername(userName);
-        druidDataSource.setDriverClassName(driverClass);
-        return new DruidDataSource();
+        druidDataSource.setUrl(dataSourceProperties.getUrl());
+        druidDataSource.setUsername(dataSourceProperties.getUsername());
+        druidDataSource.setPassword(dataSourceProperties.getPassword());
+        druidDataSource.setDriverClassName(dataSourceProperties.getDriverClassName());
+        return druidDataSource;
     }
 
-    @ConditionalOnBean(name = "dataSource")
+    @ConditionalOnBean({DataSource.class})
     @Bean
     public JobEventConfiguration jobEventConfiguration(){
         return new JobEventRdbConfiguration(dataSource());

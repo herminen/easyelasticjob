@@ -1,5 +1,7 @@
 package com.herminen.elasticjob.annotation;
 
+import org.springframework.stereotype.Component;
+
 import java.lang.annotation.*;
 
 /**

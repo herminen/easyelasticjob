@@ -1,0 +1,19 @@
+server:
+  port: 8001
+  servlet:
+    context-path: /test
+
+spring:
+  application:
+    name: test-elasticjob
+  datasource:
+    url: jdbc:mysql://docker:3306/elasticjob?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+easy:
+  elasticsearch:
+    registration:
+      server-lists: docker:2181
+      namespace: elasjob

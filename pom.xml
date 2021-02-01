@@ -11,6 +11,7 @@
     <version>0.0.1</version>
     <modules>
         <module>esay-elasticjob-autoconfiguration</module>
+        <module>esay-elasticjob-test</module>
     </modules>
 
     <parent>
