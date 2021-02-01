@@ -5,6 +5,7 @@ import com.dangdang.ddframe.job.config.JobTypeConfiguration;
 import com.dangdang.ddframe.job.config.dataflow.DataflowJobConfiguration;
 import com.dangdang.ddframe.job.config.simple.SimpleJobConfiguration;
 import com.dangdang.ddframe.job.lite.config.LiteJobConfiguration;
+import com.google.common.base.Preconditions;
 import com.herminen.elasticjob.annotation.JobConfiguration;
 import com.herminen.elasticjob.annotation.JobProperty;
 import org.springframework.beans.BeansException;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessorAdapter;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -24,9 +26,9 @@ import java.util.Map;
  * Time: 22:15
  * Description: No Description
  */
-public class JobConfigureParser implements BeanFactoryAware {
+public class JobConfigureParser extends InstantiationAwareBeanPostProcessorAdapter implements ApplicationContextAware {
 
-    private BeanFactory beanFactory;
+    private ApplicationContext applicationContext;
 
     @Override
     public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
@@ -35,6 +37,8 @@ public class JobConfigureParser implements BeanFactoryAware {
             return super.postProcessBeforeInstantiation(beanClass, beanName);
         }
         JobConfiguration annotation = beanClass.getDeclaredAnnotation(JobConfiguration.class);
+        Preconditions.checkNotNull(annotation.jobName());
+        Preconditions.checkNotNull(annotation.jobClass());
         JobCoreConfiguration jobCoreConfiguration = buildJobCoreConfiguration(annotation);
         JobTypeConfiguration jobTypeConfiguration;
         if (annotation.streamingProcess()) {
@@ -69,7 +73,7 @@ public class JobConfigureParser implements BeanFactoryAware {
     }
 
     @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }
