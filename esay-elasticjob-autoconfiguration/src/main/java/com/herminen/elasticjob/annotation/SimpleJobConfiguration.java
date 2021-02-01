@@ -116,6 +116,10 @@ public @interface SimpleJobConfiguration {
      */
     int reconcileIntervalMinutes() default 10;
 
+    /**
+     * 需指定任务方法名
+     * @return
+     */
     String method();
 
 }

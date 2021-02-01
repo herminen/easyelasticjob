@@ -33,17 +33,20 @@ public class SimpleJobConfigureParser extends InstantiationAwareBeanPostProcesso
     @Override
     public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
         boolean annotationPresent = beanClass.isAnnotationPresent(com.herminen.elasticjob.annotation.SimpleJobConfiguration.class);
+        //检查是否需要转换成job调度
         if (!annotationPresent) {
             return super.postProcessBeforeInstantiation(beanClass, beanName);
         }
         com.herminen.elasticjob.annotation.SimpleJobConfiguration annotation = beanClass.getDeclaredAnnotation(com.herminen.elasticjob.annotation.SimpleJobConfiguration.class);
         Preconditions.checkNotNull(annotation.jobName());
         try {
+            //利用javassist转换成SimpleJob类，并注入spring容器
             addJob(beanClass, annotation);
         } catch (NotFoundException |CannotCompileException |IllegalAccessException |InstantiationException e) {
             log.warn("add simple job  error}", e);
             return super.postProcessBeforeInstantiation(beanClass, beanName);
         }
+        //构造和兴配置类
         JobCoreConfiguration jobCoreConfiguration = buildJobCoreConfiguration(annotation);
         JobTypeConfiguration jobTypeConfiguration;
         if (annotation.streamingProcess()) {
@@ -53,6 +56,7 @@ public class SimpleJobConfigureParser extends InstantiationAwareBeanPostProcesso
         }
         LiteJobConfiguration liteJobConfiguration = LiteJobConfiguration.newBuilder(jobTypeConfiguration)
                 .jobShardingStrategyClass(annotation.jobShardingStrategyClass()).overwrite(false).build();
+        //启动调度任务
         new JobScheduler(applicationContext.getBean(ZookeeperRegistryCenter.class),
                 liteJobConfiguration, applicationContext.getBean(JobEventConfiguration.class)).init();
         return super.postProcessBeforeInstantiation(beanClass, beanName);
@@ -71,6 +75,7 @@ public class SimpleJobConfigureParser extends InstantiationAwareBeanPostProcesso
         DefaultListableBeanFactory listableBeanFactory = (DefaultListableBeanFactory) applicationContext.getAutowireCapableBeanFactory();
         ClassPool pool = new ClassPool(true);
         CtClass jobClass = pool.get(beanClass.getName());
+        //利用继承代理该类
         CtClass delegateCtClass = pool.makeClass(beanClass.getName() + "$Delegate", jobClass);
         delegateCtClass.addInterface(pool.getCtClass("com.dangdang.ddframe.job.api.simple.SimpleJob"));
         CtMethod executeMehthod = CtNewMethod.make("public void execute(com.dangdang.ddframe.job.api.ShardingContext shardingContext){" +
