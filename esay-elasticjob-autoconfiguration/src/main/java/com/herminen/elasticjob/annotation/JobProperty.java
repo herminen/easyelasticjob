@@ -9,6 +9,6 @@ import java.lang.annotation.*;
  */
 @Repeatable (JobProperties.class)
 public @interface JobProperty {
-    String key();
-    String value();
+    String key() default "";
+    String value() default "";
 }

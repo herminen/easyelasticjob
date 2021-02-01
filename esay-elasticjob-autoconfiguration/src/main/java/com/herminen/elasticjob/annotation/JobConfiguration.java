@@ -9,7 +9,7 @@ import java.lang.annotation.*;
  *
  * @author herminen
  */
-@Target(ElementType.METHOD)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
@@ -32,7 +32,7 @@ public @interface JobConfiguration {
      * 作业分片总数
      * @return
      */
-    int shardingTotalCount();
+    int shardingTotalCount() default 1;
 
     /**
      * 分片序列号和参数用等号分隔，多个键值对用逗号分隔
@@ -49,9 +49,9 @@ public @interface JobConfiguration {
      * 例：每次获取的数据量、作业实例从数据库读取的主键等
      * @return
      */
-    String jobParameter();
+    String jobParameter() default "";
 
-    JobProperty[] jobProperty();
+    JobProperty[] jobProperty() default {};
 
     /**
      * 是否开启任务执行失效转移，开启表示如果作业在一次任务执行中途宕机，允许将该次未完成的任务在另一作业节点上补偿执行
@@ -69,7 +69,7 @@ public @interface JobConfiguration {
      * 作业描述信息
      * @return
      */
-    String description();
+    String description() default "";
 
     /**
      * 作业实现类，需实现ElasticJob接口
@@ -114,18 +114,12 @@ public @interface JobConfiguration {
      * 默认使用平均分配策略
      * @return
      */
-    String jobShardingStrategyClass();
+    String jobShardingStrategyClass() default "io.elasticjob.lite.api.strategy.impl.AverageAllocationJobShardingStrategy";
 
     /**
      * 修复作业服务器不一致状态服务调度间隔时间，配置为小于1的任意值表示不执行修复
      * @return
      */
     int reconcileIntervalMinutes() default 10;
-
-    /**
-     * 作业事件追踪的数据源Bean引用
-     * @return
-     */
-    String eventTraceRdbDataSource();
 
 }

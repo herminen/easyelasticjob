@@ -46,7 +46,9 @@ public class JobConfigureParser extends InstantiationAwareBeanPostProcessorAdapt
         } else{
             jobTypeConfiguration = buildDataflowJobConfiguration(jobCoreConfiguration, annotation);
         }
-        return LiteJobConfiguration.newBuilder(jobTypeConfiguration).build();
+        LiteJobConfiguration liteJobConfiguration = LiteJobConfiguration.newBuilder(jobTypeConfiguration)
+                .jobShardingStrategyClass(annotation.jobShardingStrategyClass()).disabled(true).overwrite(false).build();
+        return LiteJobConfiguration.newBuilder(jobTypeConfiguration).overwrite(false).build();
     }
 
 

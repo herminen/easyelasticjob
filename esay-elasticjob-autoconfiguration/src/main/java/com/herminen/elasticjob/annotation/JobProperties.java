@@ -6,5 +6,5 @@ package com.herminen.elasticjob.annotation;
  * @author herminen
  */
 public @interface JobProperties {
-    JobProperty[] value();
+    JobProperty[] value() default {};
 }
