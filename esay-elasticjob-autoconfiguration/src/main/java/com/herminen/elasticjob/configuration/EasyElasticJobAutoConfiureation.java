@@ -28,7 +28,7 @@ import javax.sql.DataSource;
 @Configuration
 @ConditionalOnProperty(name = {"serverLists", "namespace"}, prefix = "easy.elasticsearch.registration", matchIfMissing = false)
 @Import(value = {JobConfigureParser.class})
-public class EnableEasyElasticJobAutoConfiureation {
+public class EasyElasticJobAutoConfiureation {
 
     @Resource
     private ZookeeperProperties zookeeperProperties;
