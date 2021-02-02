@@ -49,13 +49,9 @@ public class SimpleJobConfigureParser extends InstantiationAwareBeanPostProcesso
         //构造和兴配置类
         JobCoreConfiguration jobCoreConfiguration = buildJobCoreConfiguration(annotation);
         JobTypeConfiguration jobTypeConfiguration;
-        if (annotation.streamingProcess()) {
-            jobTypeConfiguration = buildSimpleJobConfiguration(beanClass, jobCoreConfiguration, annotation);
-        } else{
-            jobTypeConfiguration = buildDataflowJobConfiguration(beanClass, jobCoreConfiguration, annotation);
-        }
+        jobTypeConfiguration = buildSimpleJobConfiguration(beanClass, jobCoreConfiguration, annotation);
         LiteJobConfiguration liteJobConfiguration = LiteJobConfiguration.newBuilder(jobTypeConfiguration)
-                .jobShardingStrategyClass(annotation.jobShardingStrategyClass()).overwrite(false).build();
+                .jobShardingStrategyClass(annotation.jobShardingStrategyClass()).overwrite(true).build();
         //启动调度任务
         new JobScheduler(applicationContext.getBean(ZookeeperRegistryCenter.class),
                 liteJobConfiguration, applicationContext.getBean(JobEventConfiguration.class)).init();
@@ -86,13 +82,8 @@ public class SimpleJobConfigureParser extends InstantiationAwareBeanPostProcesso
         listableBeanFactory.registerSingleton(delegateCtClass.getName() + "$SimpleJob", delegateClass.newInstance());
     }
 
-
-    private JobTypeConfiguration buildDataflowJobConfiguration(Class<?> beanClass,JobCoreConfiguration jobCoreConfiguration, com.herminen.elasticjob.annotation.SimpleJobConfiguration annotation) {
-        return new SimpleJobConfiguration(jobCoreConfiguration, beanClass.getName()+ "$Delegate");
-    }
-
     private JobTypeConfiguration buildSimpleJobConfiguration(Class<?> beanClass, JobCoreConfiguration jobCoreConfiguration, com.herminen.elasticjob.annotation.SimpleJobConfiguration annotation) {
-        return new DataflowJobConfiguration(jobCoreConfiguration, beanClass.getName()+ "$Delegate", annotation.streamingProcess());
+        return new SimpleJobConfiguration(jobCoreConfiguration, beanClass.getName()+ "$Delegate");
     }
 
     private JobCoreConfiguration buildJobCoreConfiguration(com.herminen.elasticjob.annotation.SimpleJobConfiguration annotation) {
