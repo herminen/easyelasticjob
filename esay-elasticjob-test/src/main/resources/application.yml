@@ -1,11 +1,11 @@
 server:
   port: 8001
   servlet:
-    context-path: /test
+    context-path: /job
 
 spring:
   application:
-    name: test-elasticjob
+    name: job-elasticjob
   datasource:
     url: jdbc:mysql://docker:3306/elasticjob?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: root

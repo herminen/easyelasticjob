@@ -1,4 +1,4 @@
-package com.herminen.test;
+package com.herminen.job;
 
 import com.dangdang.ddframe.job.api.ShardingContext;
 import com.herminen.elasticjob.annotation.SimpleJobConfiguration;
