@@ -29,7 +29,7 @@ import javax.sql.DataSource;
 @Configuration
 @ConditionalOnProperty(name = {"server-lists", "namespace"}, prefix = "easy.elasticsearch.registration", matchIfMissing = false)
 @Import(value = {JobConfigureParser.class, SimpleJobConfigureParser.class})
-public class EasyElasticJobAutoConfiureation {
+public class EasyElasticJobAutoConfiguration {
 
     @Resource
     private ZookeeperProperties zookeeperProperties;

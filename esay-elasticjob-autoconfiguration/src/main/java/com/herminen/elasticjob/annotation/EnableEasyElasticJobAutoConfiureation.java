@@ -1,6 +1,6 @@
 package com.herminen.elasticjob.annotation;
 
-import com.herminen.elasticjob.configuration.EasyElasticJobAutoConfiureation;
+import com.herminen.elasticjob.configuration.EasyElasticJobAutoConfiguration;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
@@ -13,6 +13,6 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import(EasyElasticJobAutoConfiureation.class)
+@Import(EasyElasticJobAutoConfiguration.class)
 public @interface EnableEasyElasticJobAutoConfiureation {
 }
