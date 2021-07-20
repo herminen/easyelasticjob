@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
  * @author ${AUTHOR}
  */
 @Log
-@Component
+//@Component
 public class KafkaConsumerPostProcessor implements BeanPostProcessor, BeanFactoryAware {
 
     private DefaultListableBeanFactory listableBeanFactory;
